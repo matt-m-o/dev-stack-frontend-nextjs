@@ -1,7 +1,7 @@
 import { Button } from "@mantine/core";
 import { useRouter } from "next/router";
 import { ColorSchemeToggle } from "../components/ColorSchemeToggle/ColorSchemeToggle";
-
+// Created personal data type
 export default function HomePage() {
   
 
