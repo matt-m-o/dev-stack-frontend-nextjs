@@ -1,7 +1,8 @@
 import {  Button, Container, createStyles, Group, Paper, Stepper, Title } from "@mantine/core";
 import { useState } from "react";
+import { DevelopmentTypeForm } from "../components/DevTypeForm/DevelopmentTypeForm";
 import { UserPersonalDetailsForm } from "../components/UserPersonalDetailsForm/UserPersonalDetailsForm";
-import { IUserPersonalInfo } from "../types";
+import { IDevelopmentType, IUserPersonalInfo } from "../types";
 
 
 const useStyles = createStyles((theme) => ({
@@ -35,7 +36,7 @@ export default function CreateStack () {
 
 
     const [ personalInfo, setPersonalInfo ] = useState< IUserPersonalInfo | null >(null);
-    const [ devType, setDevType ] = useState();
+    const [ devType, setDevType ] = useState < IDevelopmentType[] >([]);
     const [ programmingLanguages, setProgrammingLanguages ] = useState();
 
     const nextButton = (formData: any) => (
@@ -75,15 +76,20 @@ export default function CreateStack () {
                                 formData={personalInfo}
                                 setFormData={setPersonalInfo}
                             />
-                            
-                        {nextButton(personalInfo)}
-                            
+                            {nextButton(personalInfo)}
                         </Stepper.Step>
 
                         <Stepper.Step label= 'Dev type' description=''>
+                            <DevelopmentTypeForm
+                                formData={devType}
+                                setFormData={setDevType}
+                            />
+                            {nextButton(devType.length > 0 ? devType : null)}
                         </Stepper.Step>                    
                     
                         <Stepper.Step label= 'Programming languages' description=''>
+
+                            {nextButton(programmingLanguages)}
                         </Stepper.Step>
 
 
