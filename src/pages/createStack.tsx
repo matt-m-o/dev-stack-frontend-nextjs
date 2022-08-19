@@ -1,9 +1,11 @@
 import {  Button, Container, createStyles, Group, Paper, Stepper, Title } from "@mantine/core";
 import { useState } from "react";
-import { DevelopmentTypeForm } from "../components/DevTypeForm/DevelopmentTypeForm";
+import { DevelopmentTypeForm } from "../components/DevelopmentTypeForm/DevelopmentTypeForm";
 import { UserPersonalDetailsForm } from "../components/UserPersonalDetailsForm/UserPersonalDetailsForm";
-import { IDevelopmentType, IUserPersonalInfo } from "../types";
+import { IDevelopmentType, IProgrammingLanguage, IUserPersonalInfo } from "../types";
 
+import { useQuery } from "react-query";
+import { ProgrammingLanguagesForm } from "../components/ProgrammingLanguagesForm/ProgrammingLanguagesForm";
 
 const useStyles = createStyles((theme) => ({
 
@@ -36,8 +38,8 @@ export default function CreateStack () {
 
 
     const [ personalInfo, setPersonalInfo ] = useState< IUserPersonalInfo | null >(null);
-    const [ devType, setDevType ] = useState < IDevelopmentType[] >([]);
-    const [ programmingLanguages, setProgrammingLanguages ] = useState();
+    const [ devType, setDevType ] = useState< IDevelopmentType[] >([]);
+    const [ programmingLanguages, setProgrammingLanguages ] = useState< IProgrammingLanguage[] >([]);
 
     const nextButton = (formData: any) => (
         <Group position="center" mt="xl">                                
@@ -88,8 +90,11 @@ export default function CreateStack () {
                         </Stepper.Step>                    
                     
                         <Stepper.Step label= 'Programming languages' description=''>
-
-                            {nextButton(programmingLanguages)}
+                            <ProgrammingLanguagesForm
+                                formData={programmingLanguages}
+                                setFormData={setProgrammingLanguages}
+                            />
+                            {nextButton(programmingLanguages.length > 0 ? programmingLanguages : null)}
                         </Stepper.Step>
 
 

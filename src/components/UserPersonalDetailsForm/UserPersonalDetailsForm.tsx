@@ -20,10 +20,12 @@ export function UserPersonalDetailsForm ({ formData, setFormData }: Props) {
             first_name: formData ? formData.first_name : '',
             last_name: formData ? formData.last_name : '',
             email: formData ? formData.email : '',
-        },        
+        },
     });
 
-    function validateForm (formData: IUserPersonalInfo) { return true; }
+    function validateForm (formData: IUserPersonalInfo) {        
+        return true;
+    }
 
     function handleFormChange(change: Partial<IUserPersonalInfo>) { 
         const updated = { 

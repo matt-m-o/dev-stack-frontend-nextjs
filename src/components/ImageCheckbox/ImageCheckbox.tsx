@@ -38,14 +38,16 @@ export function ImageCheckbox({
         {...others}
         onClick={() => handleChange(!value)}
         className={cx(classes.button, className)}
-      >
-        <Image src={image} alt={title} width={40} />        
+      > 
+        <div style={{display: 'grid', placeItems: 'center', minHeight: 40}}>
+          <Image src={image} alt={title} width={40} />        
+        </div>        
   
         <div className={classes.body}>
-            <Text weight={500} size="sm" sx={{ lineHeight: 1 }} mb={3}>
+            <Text weight={500} size="sm" sx={{ lineHeight: 1.5 }} mb={0}>
                 {title}
             </Text>
-            <Text color="dimmed" size="xs" sx={{ lineHeight: 1 }} mb={0}>
+            <Text color="dimmed" size="xs" sx={{ lineHeight: 1.5 }} mb={0}>
                 {description}
             </Text>          
         </div>
