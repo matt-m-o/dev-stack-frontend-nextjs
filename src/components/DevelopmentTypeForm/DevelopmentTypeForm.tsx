@@ -1,11 +1,11 @@
-import { Button, Grid, Group, Radio, SimpleGrid, Code } from "@mantine/core";
+import { SimpleGrid, Loader, Center, Text, Group } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 
 import useStyles  from '../../styles/Form.styles';
 import { IDevelopmentType } from "../../types";
 import { ImageCheckbox } from "../ImageCheckbox/ImageCheckbox";
 
-import { useQueryGetAllDevelopmentTypes } from "../../services/queries";
+import { useQueryGetAllDevelopmentTypes } from "../../services/queries/queries";
 
 interface Props {
     formData: IDevelopmentType[];
@@ -40,10 +40,10 @@ export function DevelopmentTypeForm ({ formData, setFormData }: Props) {
 
     function handleFormChange(change: IDevelopmentType, checked: boolean) { 
 
-        console.log({change, checked})
-            
+        //console.log({change, checked})            
 
         let updated: IDevelopmentType[] = [];
+
         if (formData && !checked) {
             updated = formData.filter ( data => data.name !== change.name );
             //updated = updated.length > 0 ? updated : null
@@ -52,49 +52,58 @@ export function DevelopmentTypeForm ({ formData, setFormData }: Props) {
 
             //console.log(formData);
 
-            let exists;
+            const exists = formData.some( item => item.name === change.name );
 
-            if (formData) exists = formData.find( item => item.name === change.name );            
-
-            if (formData && !exists) updated = [...formData, change];
-            
-            else updated = [ change ]            
+            if (!exists) updated = [...formData, change];
         }
 
         console.log(updated)
 
         setFormData(updated);
     }
-    
-    let items;
-    items = data?.map((dataItem) => {
+        
+    const items = data?.map((dataItem) => {
         const uiItem = developmentTypeUIItems.find( uiItem => uiItem.name === dataItem.name );
         if (!uiItem) return;
 
         //console.log(dataItem);
+        const selected = formData.some( item => item.name === uiItem.name );
 
         return (
             <ImageCheckbox 
                 {...uiItem} 
                 key={uiItem.title} 
-                onChange= {handleFormChange}
-                data= { {name: uiItem.title} }
+                onChange={handleFormChange}
+                data={ dataItem }
+                checked={ selected }
             />
         )
     });
 
     return (
-        <>                          
-            <SimpleGrid
-                cols={2}
-                breakpoints={[
-                    { maxWidth: 'md', cols: 2 },
-                    { maxWidth: 'sm', cols: 1 },
-                ]}
-            >                
-                {items}                
+        <Center>
+            <SimpleGrid cols={1}>
+                <Text className={classes.title}>
+                    Types of development
+                </Text>                                                    
                 
-            </SimpleGrid>                         
-        </>
+                { !items &&
+                    <Center>
+                        <Loader/>
+                    </Center>
+                }
+                { items && !isFetching &&
+                    <SimpleGrid
+                        cols={2}
+                        breakpoints={[
+                            { maxWidth: 'md', cols: 2 },
+                            { maxWidth: 'sm', cols: 1 },
+                        ]}
+                    >
+                        {items}                        
+                    </SimpleGrid>
+                }
+            </SimpleGrid>            
+        </Center>     
     )
 }

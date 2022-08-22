@@ -13,13 +13,13 @@ export interface IDevelopmentType {
 export interface IProgrammingLanguage {
     id: string;
     name: string;
-    full_name: string;
+    full_name?: string;
 }
 
 export interface IStack {
     id: string;
     id_user: string;
     id_development_type: string;
-    development_type: IDevelopmentType;
-    programming_languages: IProgrammingLanguage[];
+    development_type?: IDevelopmentType;
+    programming_languages?: IProgrammingLanguage[];
 }

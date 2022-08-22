@@ -1,4 +1,4 @@
-import { Grid, Group, TextInput } from "@mantine/core";
+import { Grid, Group, TextInput, Text } from "@mantine/core";
 import { useForm } from '@mantine/form'
 import { Dispatch, SetStateAction } from "react";
 
@@ -23,8 +23,13 @@ export function UserPersonalDetailsForm ({ formData, setFormData }: Props) {
         },
     });
 
-    function validateForm (formData: IUserPersonalInfo) {        
-        return true;
+    function validateForm (data: IUserPersonalInfo) {
+        // simple validation
+        return (
+            data.first_name.length > 0 &&
+            data.last_name.length > 0 &&
+            data.email.length > 0
+        )        
     }
 
     function handleFormChange(change: Partial<IUserPersonalInfo>) { 
@@ -33,14 +38,18 @@ export function UserPersonalDetailsForm ({ formData, setFormData }: Props) {
             ...change 
         };
 
-        if (validateForm(updated)) setFormData(updated);
+        validateForm(updated) ? setFormData(updated) : setFormData(null);
+
+        console.log(formData);
     }
 
     return (
         <>            
             <Group position="center">
+
                 <form>
-                    <Grid columns={10} align='center'>
+                    <Grid columns={10} align='center'>                        
+
                         <Grid.Col span={4}>
                             <TextInput
                                 label= {

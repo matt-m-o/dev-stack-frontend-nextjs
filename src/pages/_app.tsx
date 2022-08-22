@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
 import { QueryClientProvider } from 'react-query';
-import { queryClient } from '../services/queryClient';
+import { queryClient } from '../services/queries/queryClient';
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;

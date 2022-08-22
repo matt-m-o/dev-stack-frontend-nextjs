@@ -6,9 +6,9 @@ import useStyles from '../../styles/ImageCheckbox.styles'
 interface ImageCheckboxProps {
     checked?: boolean;
     defaultChecked?: boolean;
-    onChange?(checked: boolean): void;
+    onChange?(data: any, checked: boolean): void;
     title: string;
-    description: string;
+    description?: string;
     image: string;
     data?: any;
 }

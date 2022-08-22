@@ -1,13 +1,14 @@
-import { Button, Grid, Group, Radio, SimpleGrid, Code } from "@mantine/core";
+import { SimpleGrid, Center, Loader, Text } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 
 import useStyles  from '../../styles/Form.styles';
 import { IProgrammingLanguage } from "../../types";
 import { ImageCheckbox } from "../ImageCheckbox/ImageCheckbox";
 
-import { useQueryGetAllProgrammingLanguages } from "../../services/queries";
+import { useQueryGetAllProgrammingLanguages } from "../../services/queries/queries";
 
 import logos from '../../images/programming_languages_logos'
+import { IconTemperatureMinus } from "@tabler/icons";
 
 interface Props {
     formData: IProgrammingLanguage[];
@@ -82,21 +83,18 @@ export function ProgrammingLanguagesForm ({ formData, setFormData }: Props) {
             
 
         let updated: IProgrammingLanguage[] = [];
-        if (formData && !checked) {
-            updated = formData.filter ( data => data.name !== change.name );
+
+        if (!checked) {
+            updated = formData.filter( data => data.name !== change.name );
             //updated = updated.length > 0 ? updated : null
         }
         else if (checked) {
 
             //console.log(formData)
-
-            let exists;
-
-            if (formData) exists = formData.find( item => item.name === change.name );            
-
-            if (formData && !exists) updated = [...formData, change];
             
-            else updated = [ change ]            
+            const exists = formData.some( item => item.name === change.name );
+
+            if (!exists) updated = [...formData, change];
         }
 
         console.log(updated)
@@ -111,29 +109,52 @@ export function ProgrammingLanguagesForm ({ formData, setFormData }: Props) {
 
         //console.log(dataItem);
 
+        const selected = formData.some( item => item.name === uiItem.name );
+
         return (
             <ImageCheckbox 
                 {...uiItem} 
                 key={uiItem.title} 
                 onChange= {handleFormChange}
-                data= { {name: uiItem.title} }
+                data= { dataItem }
+                checked={ selected }
             />
         )
     });
 
-    return (
-        <>                          
-            <SimpleGrid
-                cols={5}
-                
-                breakpoints={[
-                    { maxWidth: 'md', cols: 2 },
-                    { maxWidth: 'sm', cols: 1 },                    
-                ]}
-            >                
-                {items}                
-                
-            </SimpleGrid>                         
-        </>
+
+    return (        
+        <Center>
+            <SimpleGrid cols={1}>
+                <Text className={classes.title}>
+                    Programming languages
+                </Text>
+
+                { !items &&
+                    <Center>
+                        <Loader/>
+                    </Center>
+                }
+                { items && !isFetching &&
+                    <SimpleGrid
+                        cols={5}
+                        breakpoints={[                        
+                            { maxWidth: 'md', cols: 3 },
+                            { maxWidth: 'sm', cols: 2 },                        
+                        ]}
+                    >
+                        {items}
+                    </SimpleGrid>
+                }
+
+                <Text className={classes.title} mt={40}>
+                    Frameworks
+                </Text>
+
+                <Text className={classes.title} mt={40}>
+                    Libraries
+                </Text>
+            </SimpleGrid>            
+        </Center>
     )
 }
