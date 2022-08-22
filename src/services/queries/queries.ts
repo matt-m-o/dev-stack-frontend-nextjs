@@ -1,8 +1,8 @@
 import { useQuery } from "react-query";
-import { IDevelopmentType, IProgrammingLanguage } from "../types";
+import { IDevelopmentType, IProgrammingLanguage } from "../../types";
 
-import { getAllDevelopmentTypes } from './developmentTypes';
-import { getAllProgrammingLanguages,  } from "./programmingLanguages";
+import { getAllDevelopmentTypes } from '../developmentTypes';
+import { getAllProgrammingLanguages,  } from "../programmingLanguages";
 
 
 export function useQueryGetAllDevelopmentTypes() {
