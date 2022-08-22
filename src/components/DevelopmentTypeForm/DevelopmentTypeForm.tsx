@@ -5,7 +5,9 @@ import useStyles  from '../../styles/Form.styles';
 import { IDevelopmentType } from "../../types";
 import { ImageCheckbox } from "../ImageCheckbox/ImageCheckbox";
 
-import { useQueryGetAllDevelopmentTypes } from "../../services/queries/queries";
+import { queryGetAllDevelopmentTypes } from "../../services/queries/queries";
+
+import images from '../../images/development_types'
 
 interface Props {
     formData: IDevelopmentType[];
@@ -18,14 +20,14 @@ const developmentTypeUIItems = [
         name: 'Backend',
         description: 'Sever side applications',
         title: 'Backend',        
-        image: 'https://img.icons8.com/external-xnimrodx-blue-xnimrodx/64/000000/external-server-project-management-xnimrodx-blue-xnimrodx.png',
+        image: images.backend,
         //checked: false,
     },
     {
         name: 'Frontend',
         description: 'Client side applications',
         title: 'Frontend',
-        image: 'https://img.icons8.com/external-flaticons-lineal-color-flat-icons/64/000000/external-front-end-computer-programming-flaticons-lineal-color-flat-icons.png',
+        image: images.frontend,
         //checked: false,
     },
 ];
@@ -35,7 +37,7 @@ export function DevelopmentTypeForm ({ formData, setFormData }: Props) {
     const { classes } = useStyles();
 
         
-    const { data, isFetching } = useQueryGetAllDevelopmentTypes();
+    const { data, isFetching } = queryGetAllDevelopmentTypes();
         
 
     function handleFormChange(change: IDevelopmentType, checked: boolean) { 
@@ -57,7 +59,7 @@ export function DevelopmentTypeForm ({ formData, setFormData }: Props) {
             if (!exists) updated = [...formData, change];
         }
 
-        console.log(updated)
+        //console.log(updated)
 
         setFormData(updated);
     }
@@ -85,7 +87,7 @@ export function DevelopmentTypeForm ({ formData, setFormData }: Props) {
             <SimpleGrid cols={1}>
                 <Text className={classes.title}>
                     Types of development
-                </Text>                                                    
+                </Text>
                 
                 { !items &&
                     <Center>

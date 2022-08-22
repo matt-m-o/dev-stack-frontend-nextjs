@@ -1,4 +1,4 @@
-import { attributesParser } from '../helpers/dataHelper';
+import { attributesParser, relationshipsParser } from '../helpers/dataHelper';
 import { apiClient } from '../libs/apiClient'
 import { IStack } from '../types';
 
@@ -17,7 +17,15 @@ interface IStackAddProgrammingLanguage {
 export async function getAllStacks() {
     const { data } = await apiClient('get', '/stacks');
     return data.data.map( item => {
-        return attributesParser(item);
+        const stack = relationshipsParser(attributesParser(item));
+
+        stack.development_type = attributesParser(stack.development_type)
+
+        stack.programming_languages = stack.programming_languages.map( item => {
+            return attributesParser(item);
+        });
+
+        return stack;
     });
 }
 

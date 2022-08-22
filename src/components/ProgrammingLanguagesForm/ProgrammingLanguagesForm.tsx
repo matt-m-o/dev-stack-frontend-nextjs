@@ -5,7 +5,7 @@ import useStyles  from '../../styles/Form.styles';
 import { IProgrammingLanguage } from "../../types";
 import { ImageCheckbox } from "../ImageCheckbox/ImageCheckbox";
 
-import { useQueryGetAllProgrammingLanguages } from "../../services/queries/queries";
+import { queryGetAllProgrammingLanguages } from "../../services/queries/queries";
 
 import logos from '../../images/programming_languages_logos'
 import { IconTemperatureMinus } from "@tabler/icons";
@@ -74,7 +74,7 @@ export function ProgrammingLanguagesForm ({ formData, setFormData }: Props) {
     const { classes } = useStyles();
 
         
-    const { data, isFetching } = useQueryGetAllProgrammingLanguages();
+    const { data, isFetching } = queryGetAllProgrammingLanguages();
         
 
     function handleFormChange(change: IProgrammingLanguage, checked: boolean) { 
@@ -97,7 +97,7 @@ export function ProgrammingLanguagesForm ({ formData, setFormData }: Props) {
             if (!exists) updated = [...formData, change];
         }
 
-        console.log(updated)
+        //console.log(updated)
 
         setFormData(updated);
     }
@@ -147,11 +147,11 @@ export function ProgrammingLanguagesForm ({ formData, setFormData }: Props) {
                     </SimpleGrid>
                 }
 
-                <Text className={classes.title} mt={40}>
+                <Text className={classes.title} mt={65}>
                     Frameworks
                 </Text>
 
-                <Text className={classes.title} mt={40}>
+                <Text className={classes.title} mt={65}>
                     Libraries
                 </Text>
             </SimpleGrid>            
