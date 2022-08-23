@@ -1,15 +1,15 @@
 export const attributesParser = (data: any) =>  {
     return {
-        id: data?.id,
-        relationships: data?.relationships,
+        ...data,        
         ...data.attributes,
+        attributes: undefined,
     }
 }
 
 export const relationshipsParser = (data: any) =>  {
     return {
-        id: data?.id,
-        attributes: data?.attributes,
+        ...data,
         ...data.relationships,
+        relationships: undefined,
     }
 }

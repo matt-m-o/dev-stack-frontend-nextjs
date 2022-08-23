@@ -1,8 +1,10 @@
 import { Button, Container, createStyles, Grid, Group, Header, Text } from "@mantine/core";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { AllStacksList } from "../components/AllStacksList/AllStacksList";
+import { useContext } from "react";
+import { AllStackList } from "../components/AllStackList/AllStackList";
 import { ColorSchemeToggle } from "../components/ColorSchemeToggle/ColorSchemeToggle";
+import { UserStackList } from "../components/UserStacksList/UserStackList";
+import { AuthContext } from '../contexts/AuthContext';
 
 const useStyles = createStyles( (theme) => ({ 
   root: {
@@ -38,7 +40,7 @@ const useStyles = createStyles( (theme) => ({
 
   headerTitle: {
     fontSize: '1.5em',
-    fontWeight: 700,
+    fontWeight: 700,    
   },
 
   participateBtn: {
@@ -49,6 +51,10 @@ const useStyles = createStyles( (theme) => ({
 export default function HomePage() {
 
   const { classes } = useStyles();
+
+  const { user } = useContext(AuthContext);
+
+  console.log(user);
   
 
   const router = useRouter();
@@ -82,9 +88,19 @@ export default function HomePage() {
       </Header>
 
       <Group position='center'>
-
         <Grid gutter={0} justify="space-around" grow>
-          <AllStacksList></AllStacksList>    
+          
+        </Grid>
+        <Grid columns={1} gutter={0} justify="space-around" grow>
+
+          { user &&
+            <Grid.Col>
+              <UserStackList></UserStackList>
+            </Grid.Col> 
+          }
+          <Grid.Col>
+            <AllStackList></AllStackList>
+          </Grid.Col>          
         </Grid>
       </Group>      
       

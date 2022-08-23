@@ -2,12 +2,12 @@ import {  Button, Center, Container, createStyles, Group, Paper, Stepper, Title,
 import { useEffect, useRef, useState } from "react";
 import { DevelopmentTypeForm } from "../components/DevelopmentTypeForm/DevelopmentTypeForm";
 import { UserPersonalDetailsForm } from "../components/UserPersonalDetailsForm/UserPersonalDetailsForm";
-import { IDevelopmentType, IProgrammingLanguage, IStack, IUserPersonalInfo } from "../types";
+import { IDevelopmentType, IProgrammingLanguage, IStack, IUser } from "../types";
 
-import { useQuery } from "react-query";
-import { ProgrammingLanguagesForm } from "../components/ProgrammingLanguagesForm/ProgrammingLanguagesForm";
+import { TechForm } from "../components/TechForm/TechForm";
 import { createUser } from "../services/users";
 import { createStack, stackAddProgrammingLanguage } from "../services/stacks";
+import { setCookie } from "cookies-next";
 
 const useStyles = createStyles((theme) => ({
 
@@ -44,7 +44,7 @@ export default function DevStackSurvey () {
     const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
 
-    const [ personalInfo, setPersonalInfo ] = useState< IUserPersonalInfo | null >(null);
+    const [ personalInfo, setPersonalInfo ] = useState< IUser | null >(null);
     const [ devTypes, setDevTypes ] = useState< IDevelopmentType[] >([]);
     const [ backendLanguages, setBackendLanguages ] = useState< IProgrammingLanguage[] >([]);
     const [ frontLanguages, setFrontLanguages ] = useState< IProgrammingLanguage[] >([]);
@@ -88,9 +88,16 @@ export default function DevStackSurvey () {
         }
     }
 
+    function setUserIDCookie (id: string) {
+        // Temporary solution before implementing login
+        setCookie('token', id);
+    }
+
     async function handleSubmit () {
         if (personalInfo && devTypes.length > 0 && ( backendLanguages.length > 0 || frontLanguages.length > 0 )) {
             const user = await createUser(personalInfo);
+            console.log(user);
+            setUserIDCookie(user.id)
 
             for (const devType of devTypes) {                
 
@@ -171,7 +178,7 @@ export default function DevStackSurvey () {
                         { devTypes?.some( item => item.name === 'Backend') &&                            
                             <Stepper.Step label= 'Backend tech' description=''>
                                 <div className={classes.stepFormDiv}>
-                                    <ProgrammingLanguagesForm
+                                    <TechForm
                                         formData={backendLanguages}
                                         setFormData={setBackendLanguages}
                                     />
@@ -186,7 +193,7 @@ export default function DevStackSurvey () {
                         { devTypes?.some( item => item.name === 'Frontend') &&
                             <Stepper.Step label= 'Frontend tech' description=''>
                                 <div className={classes.stepFormDiv}>
-                                    <ProgrammingLanguagesForm
+                                    <TechForm
                                         formData={frontLanguages}
                                         setFormData={setFrontLanguages}
                                     />

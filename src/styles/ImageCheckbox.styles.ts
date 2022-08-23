@@ -5,6 +5,7 @@ import { createStyles } from "@mantine/core";
       display: 'flex',
       alignItems: 'center',
       width: '100%',
+      height: '100%',
       transition: 'background-color 150ms ease, border-color 150ms ease',
       border: `1px solid ${
         checked

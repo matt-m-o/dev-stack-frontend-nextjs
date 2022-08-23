@@ -50,3 +50,26 @@ export async function stackAddProgrammingLanguage({id_user, id_stack, id_program
     );
     return attributesParser(data.data);
 }
+
+
+export async function getUserStacks({ id_user }: {id_user: string}){
+    const { data } = await apiClient('get', `/users/${id_user}/stacks`);
+    return data.data.map( item => {
+        console.log(item);
+        const stack = relationshipsParser(attributesParser(item));
+
+        console.log(stack);
+
+        stack.development_type = attributesParser(stack.development_type)
+
+        stack.programming_languages = stack.programming_languages.map( item => {
+            return attributesParser(item);
+        });
+
+        return stack;
+    });
+}
+
+export async function deleteUserStack({ id_user, id_stack }: {id_user: string, id_stack: string}){
+    await apiClient('delete', `/users/${id_user}/stacks/${id_stack}`);
+}

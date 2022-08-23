@@ -20,3 +20,9 @@ export async function createUser(
     
     return attributesParser(data.data);
 }
+
+export async function getUser({id}: { id: string }) {
+    const { data } = await apiClient('get', `/users/${id}`);
+    
+    return attributesParser(data.data);
+}

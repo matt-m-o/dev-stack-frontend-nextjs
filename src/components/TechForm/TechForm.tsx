@@ -1,4 +1,4 @@
-import { SimpleGrid, Center, Loader, Text } from "@mantine/core";
+import { SimpleGrid, Center, Loader, Text, Divider } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 
 import useStyles  from '../../styles/Form.styles';
@@ -69,7 +69,7 @@ const programmingLanguageUIItems = [
     },
 ];
 
-export function ProgrammingLanguagesForm ({ formData, setFormData }: Props) {
+export function TechForm ({ formData, setFormData }: Props) {
 
     const { classes } = useStyles();
 
@@ -126,9 +126,12 @@ export function ProgrammingLanguagesForm ({ formData, setFormData }: Props) {
     return (        
         <Center>
             <SimpleGrid cols={1}>
-                <Text className={classes.title}>
-                    Programming languages
-                </Text>
+                <div>
+                    <Text className={classes.title}>
+                        Programming languages
+                    </Text>
+                    <Divider my="xs"/>
+                </div>
 
                 { !items &&
                     <Center>
@@ -147,13 +150,24 @@ export function ProgrammingLanguagesForm ({ formData, setFormData }: Props) {
                     </SimpleGrid>
                 }
 
-                <Text className={classes.title} mt={65}>
-                    Frameworks
-                </Text>
+                <div>
+                    <Text className={classes.title} mt={65}>
+                        Frameworks
+                    </Text>
+                    <Divider my="xs"/>
+                </div>                
+                
+                <div>
+                    <Text className={classes.title} mt={65}>
+                        Libraries
+                    </Text>
+                    <Divider my="xs"/>
+                </div>
 
-                <Text className={classes.title} mt={65}>
-                    Libraries
-                </Text>
+                { 
+
+                }
+
             </SimpleGrid>            
         </Center>
     )
