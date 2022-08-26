@@ -8,6 +8,7 @@ import { NotificationsProvider } from '@mantine/notifications';
 import { QueryClientProvider } from 'react-query';
 import { queryClient } from '../services/queries/queryClient';
 import { AuthProvider, AuthContext } from '../contexts/AuthContext';
+import { SimpleHeader } from '../components/SimpleHeader/SimpleHeader';
 
 export default function App(props: AppProps & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
@@ -33,6 +34,7 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
           <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
             <NotificationsProvider>
               <QueryClientProvider client={queryClient}>
+                <SimpleHeader/>
                 <Component {...pageProps} />
               </QueryClientProvider>
             </NotificationsProvider>
