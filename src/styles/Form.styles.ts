@@ -2,6 +2,12 @@ import { createStyles } from '@mantine/core';
 
 export default createStyles((theme) => ({
 
+  title: {
+    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: 500,
+  },
+
   inputLabel: {    
     fontSize: "110%",
     fontWeight: 600,
@@ -14,6 +20,6 @@ export default createStyles((theme) => ({
 
   inputError: {
     marginLeft: '1em',
-  },
+  },  
 
 }));
