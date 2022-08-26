@@ -117,10 +117,11 @@ export function StackModal({ title, data, openStateSetter, onClose, opened }: St
 
     if (confirmed && user) {
       setDeleting(true);
-      await deleteUserStack({ id_user: user.id, id_stack: data.id });        
-      setDeleting(false);
+      await deleteUserStack({ id_user: user.id, id_stack: data.id });      
     }    
     else return;
+
+    setDeleting(false);
 
     await invalidateQuery('userStacks');
     await invalidateQuery('stacks');

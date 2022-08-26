@@ -24,22 +24,25 @@ export default function HomePage() {
       <Group position='center'>
         <Grid columns={1} gutter={0} justify="space-around" grow>
 
-          <Button className={classes.takeSurveyBtn}
-            radius={'lg'} 
-            size={'sm'}             
-            onClick={ () => router.push("devStackSurvey") }
-          >
-            Take survey
-          </Button>  
+          { !user  &&
+            <Button className={classes.takeSurveyBtn}
+              radius={'lg'}
+              size={'sm'}
+              onClick={ () => router.push("devStackSurvey") }
+            >
+              Take survey
+            </Button>
+          }
+          
 
           { user &&
             <Grid.Col>
               <UserStackList></UserStackList>
-            </Grid.Col> 
+            </Grid.Col>
           }
           <Grid.Col>
             <AllStackList></AllStackList>
-          </Grid.Col>          
+          </Grid.Col>
         </Grid>
       </Group>        
   );

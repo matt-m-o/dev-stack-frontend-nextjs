@@ -5,6 +5,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import useStyles  from '../../styles/Form.styles';
 import { IUser } from "../../types";
 
+import { UserInfoFormSchema } from './formSchema'
+
 type UserFormData = {    
     first_name: string;
     last_name: string;
@@ -16,7 +18,7 @@ interface Props {
     setFormData: Dispatch<SetStateAction< IUser | null >>;
 }
 
-export function UserPersonalDetailsForm ({ formData, setFormData }: Props) {
+export function UserInfoForm ({ formData, setFormData }: Props) {
 
     const { classes } = useStyles();
 
@@ -29,17 +31,24 @@ export function UserPersonalDetailsForm ({ formData, setFormData }: Props) {
 
     const [ formInputs, setFormInputs ] = useState <UserFormData> (inputsInitialValues);
 
+    // not using built-in 'validate' property due to issue in chromium browsers
+    const form = useForm({ initialValues: inputsInitialValues });    
 
-    function validateForm (data: IUser) {
-        // simple validation        
-        return (
-            data?.first_name?.length > 0 &&
-            data?.last_name?.length > 0 &&
-            data?.email?.length > 0
-        )        
+
+    function validateForm (data: Partial<UserFormData>) {
+        const validationResult = UserInfoFormSchema.validate(data);
+
+        console.log(validationResult);        
+
+        const errors = validationResult?.error?.details?.[0];        
+
+        return {
+            valid: !errors,
+            errors,
+        };
     }
     
-    let _formInputValues
+    
     function handleFormChange(change: Partial<UserFormData>) {
         const _formInputValues = { 
             ...formInputs,
@@ -50,8 +59,20 @@ export function UserPersonalDetailsForm ({ formData, setFormData }: Props) {
 
         setFormInputs(_formInputValues as UserFormData);
 
-        validateForm(_formInputValues) ? 
-            setFormData(_formInputValues) : setFormData(null);
+        const { valid, errors } = validateForm(_formInputValues);
+
+        valid ?  setFormData(_formInputValues) : setFormData(null);        
+        
+
+        const errorFieldName = errors?.path[0].toString();
+        const errorMessage = errors?.message;
+
+        for (const key in _formInputValues) {
+            if (errorFieldName === key) 
+                form.setFieldError(key, errorMessage?.split('is ')[1] || errorMessage );
+            else
+                form.clearFieldError(key);
+        }
 
         //console.log(formData);
     }
@@ -73,6 +94,8 @@ export function UserPersonalDetailsForm ({ formData, setFormData }: Props) {
                                 //{...form.getInputProps('first_name')}
                                 onInputCapture = { ({target}) => handleFormChange({ first_name: target?.value }) }
                                 required
+
+                                error={form.getInputProps('first_name').error}
                             />
                         </Grid.Col>
 
@@ -86,23 +109,27 @@ export function UserPersonalDetailsForm ({ formData, setFormData }: Props) {
                                 //{...form.getInputProps('last_name')}
 
                                 onInputCapture = { ({target}) => handleFormChange({ last_name: target?.value }) }
-                                required                  
+                                required
+
+                                error={form.getInputProps('last_name').error}
                             />
                         </Grid.Col>
 
                         <Grid.Col span={10}>
                             <TextInput
-                            id='email'                
-                            label= {
-                                <span className={classes.inputLabel}>Email</span>
-                            }
-                            size='sm'
-                            type='email'
-                            value={formData?.email}
-                            //{...form.getInputProps('email')}
+                                id='email'                
+                                label= {
+                                    <span className={classes.inputLabel}>Email</span>
+                                }
+                                size='sm'
+                                type='email'
+                                value={formData?.email}
+                                //{...form.getInputProps('email')}
 
-                            onInputCapture = { ({target}) => handleFormChange({ email: target?.value }) }
-                            required                  
+                                onInputCapture = { ({target}) => handleFormChange({ email: target?.value }) }
+                                required
+
+                                error={form.getInputProps('email').error}
                             />                            
 
                         </Grid.Col>

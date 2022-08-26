@@ -1,7 +1,7 @@
 import {  Button, Center, Container, createStyles, Group, Paper, Stepper, Title, Text, SimpleGrid, Grid, Loader } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { DevelopmentTypeForm } from "../components/DevelopmentTypeForm/DevelopmentTypeForm";
-import { UserPersonalDetailsForm } from "../components/UserPersonalDetailsForm/UserPersonalDetailsForm";
+import { UserInfoForm } from "../components/UserPersonalDetailsForm/UserInfoForm";
 import { IDevelopmentType, IProgrammingLanguage, IStack, IUser } from "../types";
 
 import { TechForm } from "../components/TechForm/TechForm";
@@ -155,7 +155,7 @@ export default function DevStackSurvey () {
                             allowStepSelect={active > 1}                            
                         >
                             <div className={classes.stepFormDiv}>
-                                <UserPersonalDetailsForm
+                                <UserInfoForm
                                     formData={userInfo}
                                     setFormData={setUserInfo}
                                 />                                
