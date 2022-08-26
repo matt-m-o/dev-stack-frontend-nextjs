@@ -1,14 +1,14 @@
-import { UnstyledButton, Image, Text, Checkbox, SimpleGrid, createStyles, Modal, Center, Divider, Group, Button } from "@mantine/core";
-import { useUncontrolled } from '@mantine/hooks';
+import { Image, Text, SimpleGrid, Modal, Center, Divider, Group, Button, Loader } from "@mantine/core";
 
 import useStyles from '../../styles/Modal.styles';
 import images from '../../images/development_types';
 import logos from '../../images/programming_languages_logos';
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { IconEdit, IconTrash } from "@tabler/icons";
 import { deleteUserStack } from "../../services/stacks";
 import { invalidateQuery } from "../../services/queries/queries";
+import { useRouter } from "next/router";
 
 
 const developmentTypeUIItems = [
@@ -84,42 +84,57 @@ const programmingLanguageUIItems = [
 
 
 
-interface StackModalProps {
-  opened: boolean;
-  onClose: () => void;
+interface StackModalProps {  
   title?: string;
   description?: string;
   data: any;
-  refetchData: any;
+  opened: boolean;
+  onClose: () => void;
+  openStateSetter?: (state: boolean) => void;
 }
 
-export function StackModal({ onClose, opened, title, data, refetchData }: StackModalProps ) {
+export function StackModal({ title, data, openStateSetter, onClose, opened }: StackModalProps ) {
 
   const { classes } = useStyles();
 
   const { user } = useContext(AuthContext);
 
-  const editStack = () => {      
+  const router = useRouter();
+
+  const [ deleting, setDeleting ] = useState(false);
+
+  const editStack = () => {
+    router.push({
+      pathname: 'editDevStackSurvey',
+      query: {
+        id_stack: data?.id,
+      }
+    })
   }
 
   const deleteStack = async () => {
     const confirmed = confirm("Are you sure you want to delete?");
 
-    if (confirmed && user) deleteUserStack({ id_user: user.id, id_stack: data.id });
-    
+    if (confirmed && user) {
+      setDeleting(true);
+      await deleteUserStack({ id_user: user.id, id_stack: data.id });        
+      setDeleting(false);
+    }    
+    else return;
+
     await invalidateQuery('userStacks');
-    await refetchData();
+    await invalidateQuery('stacks');
+    openStateSetter ? openStateSetter(false) : null;
   }
 
   const devTypeUIItem = developmentTypeUIItems.find( uiItem => uiItem.developmentTypeName === data?.development_type?.name );
 
-  console.log(data);
+  //console.log(data);
 
   title = title ? title : data.development_type.name + ' tech stack';
   const description = devTypeUIItem?.description;
 
 
-  // Show icons instead of names for tech items
   const programmingLanguagesUIItems = data.programming_languages.map( language => {
     const uiItem = programmingLanguageUIItems.find( uiItem => uiItem.name === language.name );
     if (!uiItem) return;
@@ -127,9 +142,9 @@ export function StackModal({ onClose, opened, title, data, refetchData }: StackM
     //console.log(dataItem);
 
     return (
-      <div>
-        <Image src={uiItem.image}/>
-      </div>
+      <div className={classes.programmingLanguageLogoContainer} key={uiItem.name}>
+        <Image src={uiItem.image} width={50} />        
+      </div>      
     )
   });
 
@@ -143,7 +158,7 @@ export function StackModal({ onClose, opened, title, data, refetchData }: StackM
       transition={'pop'}
     >
       <Center>        
-        <SimpleGrid cols={1}>
+        <SimpleGrid cols={1} style={{ width: '100%' }}>
 
             <div>
               <Text size={'lg'} weight={600} mb={0}>
@@ -152,13 +167,7 @@ export function StackModal({ onClose, opened, title, data, refetchData }: StackM
               <Divider my="xs"/>
             </div>            
                         
-            <SimpleGrid
-                cols={5}
-                breakpoints={[                        
-                    { maxWidth: 'md', cols: 3 },
-                    { maxWidth: 'sm', cols: 2 },                        
-                ]}
-            >
+            <SimpleGrid cols={5}>
                 {programmingLanguagesUIItems}
             </SimpleGrid>
           
@@ -171,7 +180,7 @@ export function StackModal({ onClose, opened, title, data, refetchData }: StackM
               
             <div>
               <Text size={'lg'} weight={600}>
-                  Libraries                
+                  Libraries
               </Text>
               <Divider my="xs"/>
             </div>
@@ -179,14 +188,18 @@ export function StackModal({ onClose, opened, title, data, refetchData }: StackM
             { user?.id === data.id_user &&
 
               <Group position="right" mt={'4vh'}>
-                <Button leftIcon={<IconEdit/>}>
+                <Button leftIcon={<IconEdit/>}
+                  onClick={ editStack }
+                >
                   Edit
                 </Button>
 
-                <Button color={'red'} leftIcon={<IconTrash/>}
+                <Button 
+                  color={'red'} 
+                  leftIcon={ deleting ? <Loader size={'xs'}/> : <IconTrash/> }
                   onClick={ deleteStack }
                 >
-                  Delete
+                  Delete                  
                 </Button>
               </Group>
 

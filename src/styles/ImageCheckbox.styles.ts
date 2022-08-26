@@ -1,6 +1,6 @@
 import { createStyles } from "@mantine/core";
 
- export default createStyles((theme, { checked }: { checked: boolean }) => ({
+ export default createStyles((theme, { checked, disabled }: { checked: boolean, disabled: boolean }) => ({
     button: {
       display: 'flex',
       alignItems: 'center',
@@ -21,10 +21,18 @@ import { createStyles } from "@mantine/core";
         : theme.colorScheme === 'dark'
         ? theme.colors.dark[8]
         : theme.white,
+      filter: disabled
+        ? 'saturate(0)'
+        : 'unset',
     },
   
     body: {
       flex: 1,
       marginLeft: theme.spacing.md,
     },
+
+    title: {
+      fontWeight: 500,
+      fontSize: '1rem'
+    }
 }));

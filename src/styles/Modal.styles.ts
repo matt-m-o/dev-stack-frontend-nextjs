@@ -33,5 +33,13 @@ export default createStyles((theme) => ({
     [theme.fn.smallerThan('md')]: {
       fontSize: '90%',
     },
-  }
+  },
+  
+  programmingLanguageLogoContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems:'center',
+    maxWidth: 80,
+    height: 50
+  },
 }));
