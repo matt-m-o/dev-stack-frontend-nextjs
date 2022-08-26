@@ -11,6 +11,7 @@ interface ImageCheckboxProps {
     description?: string;
     image: string;
     data?: any;
+    disabled: boolean;
 }
 
 export function ImageCheckbox({
@@ -22,6 +23,7 @@ export function ImageCheckbox({
     className,
     image,
     data,
+    disabled,
     ...others
   }: ImageCheckboxProps & Omit<React.ComponentPropsWithoutRef<'button'>, keyof ImageCheckboxProps>) {
     const [value, handleChange] = useUncontrolled({
@@ -29,9 +31,9 @@ export function ImageCheckbox({
       defaultValue: defaultChecked,
       finalValue: false,
       onChange: () =>{ onChange ? onChange(data, !value) : null },
-    });
+    });  
   
-    const { classes, cx } = useStyles({ checked: value });
+    const { classes, cx } = useStyles({ checked: value, disabled: disabled });    
   
     return (
       <UnstyledButton
@@ -44,7 +46,7 @@ export function ImageCheckbox({
         </div>        
   
         <div className={classes.body}>
-            <Text weight={500} size="sm" sx={{ lineHeight: 1.5 }} mb={0}>
+            <Text className={classes.title} sx={{ lineHeight: 1.5 }} mb={0}>
                 {title}
             </Text>
             <Text color="dimmed" size="xs" sx={{ lineHeight: 1.5 }} mb={0}>
@@ -53,7 +55,7 @@ export function ImageCheckbox({
         </div>
   
         <Checkbox
-          checked={value}
+          checked={false}
           onChange={() => {}}
           tabIndex={-1}
           styles={{ input: { cursor: 'pointer' } }}
