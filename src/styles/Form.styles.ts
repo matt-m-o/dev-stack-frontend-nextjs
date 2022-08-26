@@ -5,7 +5,7 @@ export default createStyles((theme) => ({
   title: {
     fontSize: 20,
     textAlign: 'center',
-    /* marginBottom: 40, */
+    fontWeight: 500,
   },
 
   inputLabel: {    
