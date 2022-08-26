@@ -22,7 +22,9 @@ export async function createUser(
 }
 
 export async function getUser({id}: { id: string }) {
-    const { data } = await apiClient('get', `/users/${id}`);
+    const { data } = await apiClient('get', `/users/${id}`);    
     
+    if (!data.data) return null;    
+
     return attributesParser(data.data);
 }

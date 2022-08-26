@@ -85,8 +85,7 @@ export function TechForm ({ formData, setFormData }: Props) {
         let updated: IProgrammingLanguage[] = [];
 
         if (!checked) {
-            updated = formData.filter( data => data.name !== change.name );
-            //updated = updated.length > 0 ? updated : null
+            updated = formData.filter( data => data.name !== change.name );            
         }
         else if (checked) {
 
@@ -118,6 +117,7 @@ export function TechForm ({ formData, setFormData }: Props) {
                 onChange= {handleFormChange}
                 data= { dataItem }
                 checked={ selected }
+                disabled={ false }
             />
         )
     });
@@ -163,10 +163,6 @@ export function TechForm ({ formData, setFormData }: Props) {
                     </Text>
                     <Divider my="xs"/>
                 </div>
-
-                { 
-
-                }
 
             </SimpleGrid>            
         </Center>

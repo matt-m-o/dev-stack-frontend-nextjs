@@ -1,4 +1,4 @@
-import { SimpleGrid, Loader, Center, Text, Group } from "@mantine/core";
+import { SimpleGrid, Loader, Center, Text, Group, Divider } from "@mantine/core";
 import { Dispatch, SetStateAction } from "react";
 
 import useStyles  from '../../styles/Form.styles';
@@ -12,6 +12,8 @@ import images from '../../images/development_types'
 interface Props {
     formData: IDevelopmentType[];
     setFormData: Dispatch<SetStateAction< IDevelopmentType[] >>;
+    selectOnlyOne?: boolean;
+    lockSelection?: boolean;
 }
 
 
@@ -32,17 +34,18 @@ const developmentTypeUIItems = [
     },
 ];
 
-export function DevelopmentTypeForm ({ formData, setFormData }: Props) {
+export function DevelopmentTypeForm ({ formData, setFormData, selectOnlyOne, lockSelection }: Props) {
 
     const { classes } = useStyles();
 
         
-    const { data, isFetching } = queryGetAllDevelopmentTypes();
+    const { data, isFetching } = queryGetAllDevelopmentTypes();    
         
 
     function handleFormChange(change: IDevelopmentType, checked: boolean) { 
 
-        //console.log({change, checked})            
+        if (lockSelection) return;
+        //console.log({change, checked})
 
         let updated: IDevelopmentType[] = [];
 
@@ -59,7 +62,7 @@ export function DevelopmentTypeForm ({ formData, setFormData }: Props) {
             if (!exists) updated = [...formData, change];
         }
 
-        //console.log(updated)
+        if (selectOnlyOne) updated = updated.filter( data => data.name === change.name );
 
         setFormData(updated);
     }
@@ -78,16 +81,20 @@ export function DevelopmentTypeForm ({ formData, setFormData }: Props) {
                 onChange={handleFormChange}
                 data={ dataItem }
                 checked={ selected }
+                disabled={ lockSelection && !selected ? true : false }
             />
         )
     });
 
     return (
         <Center>
-            <SimpleGrid cols={1}>
-                <Text className={classes.title}>
-                    Types of development
-                </Text>
+            <SimpleGrid cols={1}>                
+                <div>
+                    <Text className={classes.title}>
+                        Types of development
+                    </Text>
+                    <Divider my="xs"/>
+                </div>
                 
                 { !items &&
                     <Center>
