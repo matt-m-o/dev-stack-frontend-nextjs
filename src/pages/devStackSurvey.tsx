@@ -1,4 +1,4 @@
-import {  Button, Center, Container, createStyles, Group, Paper, Stepper, Title, Text, SimpleGrid, Grid } from "@mantine/core";
+import {  Button, Center, Container, createStyles, Group, Paper, Stepper, Title, Text, SimpleGrid, Grid, Loader } from "@mantine/core";
 import { useEffect, useRef, useState } from "react";
 import { DevelopmentTypeForm } from "../components/DevelopmentTypeForm/DevelopmentTypeForm";
 import { UserPersonalDetailsForm } from "../components/UserPersonalDetailsForm/UserPersonalDetailsForm";
@@ -6,8 +6,9 @@ import { IDevelopmentType, IProgrammingLanguage, IStack, IUser } from "../types"
 
 import { TechForm } from "../components/TechForm/TechForm";
 import { createUser } from "../services/users";
-import { createStack, stackAddProgrammingLanguage } from "../services/stacks";
+import { createUserStack, saveStackProgrammingLanguagesChanges, stackAddProgrammingLanguage } from "../services/stacks";
 import { setCookie } from "cookies-next";
+import { invalidateQuery } from "../services/queries/queries";
 
 const useStyles = createStyles((theme) => ({
 
@@ -30,7 +31,7 @@ const useStyles = createStyles((theme) => ({
     stepButtonsDiv: {
         display: 'flex',
         justifyContent: 'center',
-        gap: 10
+        gap: 10,
     }
     
 }));
@@ -44,12 +45,12 @@ export default function DevStackSurvey () {
     const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
 
-    const [ personalInfo, setPersonalInfo ] = useState< IUser | null >(null);
+    const [ userInfo, setUserInfo ] = useState< IUser | null >(null);
     const [ devTypes, setDevTypes ] = useState< IDevelopmentType[] >([]);
     const [ backendLanguages, setBackendLanguages ] = useState< IProgrammingLanguage[] >([]);
     const [ frontLanguages, setFrontLanguages ] = useState< IProgrammingLanguage[] >([]);
     
-
+    const [ formSubmitted, setFormSubmitted ] = useState(false);
 
     const nextButton = (formData: any) => (
         <Group position="center" mt="xl">                                
@@ -73,20 +74,7 @@ export default function DevStackSurvey () {
                 Back
             </Button>
         </Group>
-    )
-
-    function stackAddProgrammingLanguages (
-        stack: IStack,
-        programmingLanguages: IProgrammingLanguage[],
-    ) {
-        for (const language of programmingLanguages) {
-            stackAddProgrammingLanguage({
-                id_user: stack.id_user,
-                id_stack: stack.id,
-                id_programming_language: language.id,
-            });
-        }
-    }
+    )    
 
     function setUserIDCookie (id: string) {
         // Temporary solution before implementing login
@@ -94,14 +82,14 @@ export default function DevStackSurvey () {
     }
 
     async function handleSubmit () {
-        if (personalInfo && devTypes.length > 0 && ( backendLanguages.length > 0 || frontLanguages.length > 0 )) {
-            const user = await createUser(personalInfo);
+        if (userInfo && devTypes.length > 0 && ( backendLanguages.length > 0 || frontLanguages.length > 0 )) {
+            const user = await createUser(userInfo);
             console.log(user);
-            setUserIDCookie(user.id)
+            setUserIDCookie(user.id);
 
             for (const devType of devTypes) {                
 
-                const stack = await createStack({
+                const stack = await createUserStack({
                     id_user: user.id,
                     id_development_type: devType.id,
                 });
@@ -109,20 +97,40 @@ export default function DevStackSurvey () {
                 console.log(stack);
 
                 if (devType.name === 'Backend')
-                    stackAddProgrammingLanguages(stack, backendLanguages);
+                    saveStackProgrammingLanguagesChanges(stack, backendLanguages);
                 
                 if (devType.name === 'Frontend')
-                    stackAddProgrammingLanguages(stack, frontLanguages);   
-            }
+                    saveStackProgrammingLanguagesChanges(stack, frontLanguages);
+            }            
+
+            setTimeout( () => {
+                console.log("Redirecting...");                
+                
+                window.location.pathname = '/'; // redirecting and forcing reload
+            }, 3000)
         }
     }
+
 
 
     function Completed() {
         handleSubmit();
         console.log("Completed")
 
-        return <Text>Completed</Text>
+        return (
+            <div>
+                { !formSubmitted &&
+                    <Center>
+                        <Loader/>
+                    </Center>
+                }
+                { formSubmitted &&
+                    <Center>
+                        <Text>Completed</Text>
+                    </Center>
+                }
+            </div>            
+        )
     }
 
     return (
@@ -148,11 +156,11 @@ export default function DevStackSurvey () {
                         >
                             <div className={classes.stepFormDiv}>
                                 <UserPersonalDetailsForm
-                                    formData={personalInfo}
-                                    setFormData={setPersonalInfo}
+                                    formData={userInfo}
+                                    setFormData={setUserInfo}
                                 />                                
                             </div>                            
-                            {nextButton(personalInfo)}                            
+                            {nextButton(userInfo)}                            
                         </Stepper.Step>
 
                         <Stepper.Step label= 'Dev type' description=''>
